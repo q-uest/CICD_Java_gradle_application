@@ -1,0 +1,53 @@
+podTemplate(cloud: 'kubernetes', containers: 
+[containerTemplate(args: '', command: '', image: 
+
+'jenkins/inbound-agent:latest', livenessProbe: containerLivenessProbe(execArgs: '', failureThreshold: 0, 
+
+initialDelaySeconds: 0, periodSeconds: 0, successThreshold: 0, timeoutSeconds: 0), name: 'jnlp', 
+
+resourceLimitCpu: '500m', resourceLimitEphemeralStorage: '', resourceLimitMemory: '1000Mi', 
+
+resourceRequestCpu: '500m', resourceRequestEphemeralStorage: '', resourceRequestMemory: '1000Mi', 
+
+workingDir: '/home/jenkins/agent')], namespace: 'jenkins') 
+{
+    node(POD_LABEL) {
+     stage("Pipeline 
+
+job starts")
+     {
+        environment{
+        VERSION = "${env.BUILD_ID}"
+       }
+       stage("sonar 
+
+quality check"){
+            script{
+                    withSonarQubeEnv(credentialsId: 'sonarqube-id') {
+ 
+
+                           sh 'chmod +x gradlew'
+                            sh './gradlew sonarqube'
+     
+
+               }
+
+                    
+                      def qg = waitForQualityGate()
+                  
+
+    if (qg.status != 'OK') {
+                           error "Pipeline aborted due to quality gate 
+
+failure: ${qg.status}"
+                      }
+                    
+
+                }  
+            }
+        
+       }
+    }
+}
+
+
