@@ -6,6 +6,9 @@ podTemplate(cloud: 'kubernetes', containers: [containerTemplate(args: '', comman
         environment{
         VERSION = "${env.BUILD_ID}"
        }
+       stage("checkout scm") {
+        git branch: 'main', url: 'https://github.com/q-uest/CICD_Java_gradle_application'
+        }
        stage("sonar uality check"){
             script{
                     withSonarQubeEnv(credentialsId: 'sonarqube-id') {
