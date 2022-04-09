@@ -10,6 +10,7 @@ podTemplate(cloud: 'kubernetes', containers: [containerTemplate(args: '', comman
             script{
                     withSonarQubeEnv(credentialsId: 'sonarqube-id') {
                             sh 'ls -1'
+                            sh 'sleep 1000'
                             sh 'chmod +x ./gradlew'
                             sh './gradlew sonarqube'
      
