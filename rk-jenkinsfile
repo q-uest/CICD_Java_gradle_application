@@ -9,7 +9,7 @@ podTemplate(cloud: 'kubernetes', containers: [containerTemplate(args: '', comman
        stage("sonar uality check"){
             script{
                     withSonarQubeEnv(credentialsId: 'sonarqube-id') {
-                            sh 'ls -1'
+                            sh 'pwd;ls -1'
                             sh 'sleep 1000'
                             sh 'chmod +x ./gradlew'
                             sh './gradlew sonarqube'
